@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Отчет о погоде {% endblock %}</h1>
+        <p class="text-start">За период {{ lastrecord['observ_date'] }} в {{ source }} погода хорошая.</p>
+        <p class="text-start">Температура воздуха составляла в среднем {{ lastrecord['temperature'] }} градуса.</p>
+        <p class="text-start">Влажность воздуха составляла в среднем {{ lastrecord['humidity'] }} %.</p>
+{% endblock %}  

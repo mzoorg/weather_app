@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} A weather statistic for {{ source }} {% endblock %}</h1>
+    {% for record in observations %}
+        <entity class="media content-section">
+            <div class="media-body">
+            <div class="entity-metadata">
+                <a class="mr-2" href="{{ url_for('get_record', record_id=record.id)}}">Record N {{ record.id }}</a>
+                <small class="text-muted">Time period {{ record.observ_date }}</small>
+            </div>
+                <p class="entity-content">Temperature is {{ record.temperature }} C and Humidity is {{ record.humidity }}</p>
+            </div>
+        </entity>               
+    {% endfor %}
+{% endblock content %}
