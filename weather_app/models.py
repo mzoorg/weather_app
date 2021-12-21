@@ -13,5 +13,4 @@ class Weather(db.Model):
     def __repr__(self):
         return f"{self.id}, {self.date_created}, {self.station}, {self.observ_date}, {self.temperature}, {self.humidity}"
 
-
-
+db.create_all()
