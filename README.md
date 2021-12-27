@@ -1,1 +1,1 @@
-My app for request-weather  
+My app for get weather by api

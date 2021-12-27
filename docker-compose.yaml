@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  app_instance:
+    image: weather_app
+    networks:
+      - app
+      - db
+    env_file:
+      - ./env/app.env
+      - ./env/flask.env
+    depends_on:
+      - db_instance
+    ports:
+      - "5000:5000"
+
+  db_instance:
+    image: mysql
+    networks:
+      - db
+    env_file:
+      - ./env/db.env
+    volumes:
+      - mydata:/var/lib/mysql
+
+networks:
+  app:
+  db:
+
+volumes:
+  mydata:
