@@ -10,7 +10,8 @@ services:
       - ./env/app.env
       - ./env/flask.env
     depends_on:
-      - db_instance
+      db_instance:
+        condition: service_healthy
     ports:
       - "5000:5000"
 
@@ -20,12 +21,11 @@ services:
       - db
     env_file:
       - ./env/db.env
-    volumes:
-      - mydata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "db_instance"]
+      timeout: 20s
+      retries: 10
 
 networks:
   app:
   db:
-
-volumes:
-  mydata:
