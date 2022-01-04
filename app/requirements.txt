@@ -10,7 +10,7 @@ itsdangerous==2.0.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
 mysql==0.0.3
-mysql-connector==2.2.9
+mysql-connector-python==8.0.27
 mysqlclient==2.1.0
 pip==20.2.3
 prometheus-client==0.12.0

@@ -1,8 +1,7 @@
 global:
   scrape_interval:     3s
-
   external_labels:
-      monitor: 'example-app'
+      monitor: 'weather-app'
 
 rule_files:
 
@@ -15,7 +14,7 @@ scrape_configs:
   - job_name: 'example'
 
     dns_sd_configs:
-      - names: ['app']
-        port: 5000
+      - names: ['app_instance']
+        port: $EXPORTER_PORT
         type: A
         refresh_interval: 5s
