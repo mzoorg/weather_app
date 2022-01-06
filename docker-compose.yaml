@@ -35,7 +35,7 @@ services:
     networks:
       - app
     environment:
-    - EXPORTER_PORT=5099
+      - EXPORTER_PORT=5099
 
   # Grafana for visualization
   grafana:

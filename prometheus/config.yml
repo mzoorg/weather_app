@@ -15,6 +15,6 @@ scrape_configs:
 
     dns_sd_configs:
       - names: ['app_instance']
-        port: $EXPORTER_PORT
+        port: 5099
         type: A
         refresh_interval: 5s
