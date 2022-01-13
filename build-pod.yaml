@@ -1,9 +1,12 @@
 apiVersion: v1
 kind: Pod
+metadata:
+  labels:
+    some-label: pod-runner
 spec:
   containers:  # list of containers that you want present for your build, you can define a default container in the Jenkinsfile
     - name: docker
-      image: docker
+      image: docker:20.10.12-alpine3.15
       command: ["tail", "-f", "/dev/null"]
       imagePullPolicy: Always
       volumeMounts:
