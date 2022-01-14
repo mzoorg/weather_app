@@ -3,6 +3,7 @@ kind: Pod
 metadata:
   labels:
     some-label: pod-runner
+  name: my-docker-pod
 spec:
   containers:  # list of containers that you want present for your build, you can define a default container in the Jenkinsfile
     - name: docker

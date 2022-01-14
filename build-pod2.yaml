@@ -1,0 +1,32 @@
+apiVersion: v1 
+kind: Pod 
+metadata:
+  labels:
+    some-label: pod-runner2
+  name: dind
+spec: 
+    containers: 
+      - name: docker-cmds 
+        image: docker:20.10.12-alpine3.15
+        command: ["tail", "-f", "/dev/null"]
+        resources: 
+            requests: 
+                cpu: 100m 
+                memory: 256Mi 
+        env: 
+          - name: DOCKER_HOST 
+            value: tcp://localhost:2375 
+      - name: dind-daemon 
+        image: docker:20.10.12-dind
+        resources: 
+            requests: 
+                cpu: 500m 
+                memory: 512Mi 
+        securityContext: 
+            privileged: true 
+        volumeMounts: 
+          - name: docker-graph-storage 
+            mountPath: /var/lib/docker 
+    volumes: 
+      - name: docker-graph-storage 
+        emptyDir: {}
