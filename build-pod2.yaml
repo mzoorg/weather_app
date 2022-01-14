@@ -18,6 +18,7 @@ spec:
             value: tcp://localhost:2375 
       - name: dind-daemon 
         image: docker:20.10.12-dind
+        command: ["dockerd"]
         resources: 
             requests: 
                 cpu: 500m 
