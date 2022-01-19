@@ -11,7 +11,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         container('docker-cmds') {  
-          docker-cmds.withRegistry("0ee33d5f-c0d3-4f77-af0e-feb05c3a2f2f") {
+          docker.withDockerRegistry(credentialsId: '0ee33d5f-c0d3-4f77-af0e-feb05c3a2f2f') {
                 sh 'printenv'
                 tag = env.TAG_NAME ?: env.BUILD_ID
                 release = env.TAG_NAME ? true : false
