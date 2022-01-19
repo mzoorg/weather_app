@@ -28,6 +28,11 @@ spec:
         volumeMounts: 
           - name: docker-graph-storage 
             mountPath: /var/lib/docker 
-    volumes: 
+      - name: kubectl
+        image: bitnami/kubectl
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 10; done"]
+        tty: true
+    volumes:
       - name: docker-graph-storage 
         emptyDir: {}
