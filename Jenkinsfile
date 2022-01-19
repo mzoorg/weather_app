@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('Build Docker Image') {
       steps {
-        container('docker-cmds') 
+        container('docker-cmds') {
           script {  
             withDockerRegistry(credentialsId: '0ee33d5f-c0d3-4f77-af0e-feb05c3a2f2f') {
                   sh 'printenv'
