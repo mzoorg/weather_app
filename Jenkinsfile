@@ -10,17 +10,19 @@ pipeline {
   stages {
     stage('Build Docker Image') {
       steps {
-        container('docker-cmds') {  
-          docker.withDockerRegistry(credentialsId: '0ee33d5f-c0d3-4f77-af0e-feb05c3a2f2f') {
-                sh 'printenv'
-                tag = env.TAG_NAME ?: env.BUILD_ID
-                release = env.TAG_NAME ? true : false
-                def img = docker.build("mzoorg/weatherapp:${tag}")
-                img.push()
-                if (env.TAG_NAME) {
-                  img.push("latest")
-                }
-          }      
+        container('docker-cmds') 
+          script {  
+            withDockerRegistry(credentialsId: '0ee33d5f-c0d3-4f77-af0e-feb05c3a2f2f') {
+                  sh 'printenv'
+                  tag = env.TAG_NAME ?: env.BUILD_ID
+                  release = env.TAG_NAME ? true : false
+                  def img = docker.build("mzoorg/weatherapp:${tag}")
+                  img.push()
+                  if (env.TAG_NAME) {
+                    img.push("latest")
+                  }
+            }
+          }
         }
       }
     }
