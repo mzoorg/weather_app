@@ -30,7 +30,7 @@ pipeline {
     stage('Deploy in test') {
       steps {
         container('kubectl') {
-          sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}' deploykube/app/deployment-app.yaml"
+          sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}/' deploykube/app/deployment-app.yaml"
           sh "kubectl -f deploykube --recursive -n test"
         }
       } 

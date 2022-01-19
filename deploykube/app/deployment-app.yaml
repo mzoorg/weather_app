@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: weather-app
-          image: ___K8S_IMG___
+          image: myvalue
           # image: mzoorg/weatherapp
           imagePullPolicy: IfNotPresent
           # livenessProbe:
