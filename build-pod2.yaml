@@ -32,7 +32,8 @@ spec:
         image: bitnami/kubectl
         command: ["/bin/sh"]
         args: ["-c", "while true; do echo hello; sleep 10; done"]
-        tty: true
+        securityContext:
+          runAsUser: 0
     volumes:
       - name: docker-graph-storage 
         emptyDir: {}
