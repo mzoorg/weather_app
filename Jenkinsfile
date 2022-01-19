@@ -29,8 +29,7 @@ pipeline {
       steps {
         container('kubectl') {
           sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}' deploykube/app/deployment-app.yaml"
-          kubectl get all -n test
-          kubectl -f deploykube --recursive -n test
+          sh "kubectl -f deploykube --recursive -n test"
         }
       } 
     }
