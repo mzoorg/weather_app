@@ -4,3 +4,4 @@ app/venv/
 app/*.env
 app/**/__pycache__/
 *.old
+plan*
