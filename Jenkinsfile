@@ -12,7 +12,7 @@ pipeline {
       steps {
         container('docker-cmds') {
           script {  
-            docker.withDockerRegistry(credentialsId: 'dockerhubcreds') {
+            withDockerRegistry(credentialsId: 'dockerhubcreds') {
                   sh 'printenv'
                   tag = env.TAG_NAME ?: env.BUILD_ID
                   release = env.TAG_NAME ? true : false
