@@ -1,3 +1,5 @@
+def tag = 'latest'
+
 pipeline {
   agent {
     kubernetes {
@@ -8,31 +10,31 @@ pipeline {
   }
   
   stages {
-    stage('Build Docker Image') {
-      steps {
-        container('docker-cmds') {
-          script {  
-            withDockerRegistry(credentialsId: 'dockerhubcreds') {
-                  sh 'printenv'
-                  tag = env.TAG_NAME ?: env.BUILD_ID
-                  release = env.TAG_NAME ? true : false
-                  def img = docker.build("mzoorg/weatherapp:${tag}")
-                  img.push()
-                  if (env.TAG_NAME) {
-                    img.push("latest")
-                  }
-            }
-          }
-        }
-      }
-    }
+    // stage('Build Docker Image') {
+    //   steps {
+    //     container('docker-cmds') {
+    //       script {  
+    //         withDockerRegistry(credentialsId: 'dockerhubcreds') {
+    //               sh 'printenv'
+    //               tag = env.TAG_NAME ?: env.BUILD_ID
+    //               release = env.TAG_NAME ? true : false
+    //               def img = docker.build("mzoorg/weatherapp:${tag}")
+    //               img.push()
+    //               if (env.TAG_NAME) {
+    //                 img.push("latest")
+    //               }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
     
     stage('Deploy in test') {
       steps {
         container('kubectl') {
           sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}/' deploykube/app/deployment-app.yaml"
-          sh "alias k='kubectl -n test'"
-          sh "k -f deploykube --recursive"
+          sh "kubectl version"
+          sh "kubectl apply -f deploykube --recursive"
         }
       } 
     }
