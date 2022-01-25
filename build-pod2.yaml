@@ -21,8 +21,8 @@ spec:
         command: ["dockerd", "--host=unix:///var/run/docker.sock", "--host=tcp://0.0.0.0:2375"]
         resources: 
             requests: 
-                cpu: 500m 
-                memory: 512Mi 
+                cpu: 200m
+                memory: 512Mi
         securityContext: 
             privileged: true 
         volumeMounts: 
