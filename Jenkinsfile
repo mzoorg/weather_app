@@ -34,7 +34,7 @@ pipeline {
         container('kubectl') {
           sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}/' deploykube/app/deployment-app.yaml"
           sh "kubectl version"
-          sh "kubectl apply -f deploykube --recursive"
+          sh "kubectl apply -f deploykube -n test --recursive"
         }
       } 
     }
