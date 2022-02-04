@@ -10,25 +10,48 @@ pipeline {
   }
   
   stages {
-    // stage('Build Docker Image') {
-    //   steps {
-    //     container('docker-cmds') {
-    //       script {  
-    //         withDockerRegistry(credentialsId: 'dockerhubcreds') {
-    //               sh 'printenv'
-    //               tag = env.TAG_NAME ?: env.BUILD_ID
-    //               release = env.TAG_NAME ? true : false
-    //               def img = docker.build("mzoorg/weatherapp:${tag}")
-    //               img.push()
-    //               if (env.TAG_NAME) {
-    //                 img.push("latest")
-    //               }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    stage('git') {
+        steps {
+            git 'https://github.com/mzoorg/weather_app.git'
+        }
+    }
     
+    stage('Test sonar') {
+        environment {
+            SCANNER_HOME = tool 'SonarQubeScanner'
+            PROJECT_NAME = "Myproject1"
+        }
+        steps {
+            withSonarQubeEnv(installationName: 'mysonar', credentialsId: 'sonarqube-secret') {
+               sh 'printenv'
+               sh "${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_NAME}"// some block
+            }
+        }
+    }
+
+    // add condition to build img
+
+    stage('Build Docker Image') {
+      steps {
+        container('docker-cmds') {
+          script {  
+            withDockerRegistry(credentialsId: 'dockerhubcreds') {
+                  sh 'printenv'
+                  tag = env.TAG_NAME ?: env.BUILD_ID
+                  release = env.TAG_NAME ? true : false
+                  def img = docker.build("mzoorg/weatherapp:${tag}")
+                  img.push()
+                  if (env.TAG_NAME) {
+                    img.push("latest")
+                  }
+            }
+          }
+        }
+      }
+    }
+
+    //add check docker img?
+
     stage('Deploy in test') {
       steps {
         container('kubectl') {
@@ -38,5 +61,7 @@ pipeline {
         }
       } 
     }
+
+    // add condition to deploy in prod
   }
 }
