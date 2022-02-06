@@ -6,7 +6,6 @@ metadata:
   labels:
     app: weather-app
 spec:
-  type: LoadBalancer
   ports:
     - name: http
       protocol: TCP

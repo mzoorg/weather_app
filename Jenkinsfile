@@ -55,13 +55,20 @@ pipeline {
     stage('Deploy in test') {
       steps {
         container('kubectl') {
-          sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}/' deploykube/app/deployment-app.yaml"
           sh "kubectl version"
-          sh "kubectl apply -f deploykube -n test --recursive"
+          sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}/' deploykube/app/deployment-app.yaml"
+          withCredentials([
+            usernamePassword(credentialsId: 'mysqlcreds', passwordVariable: 'MYSQL_PASSWORD', usernameVariable: 'MYSQL_USER'),
+            string(credentialsId: 'rds-test', variable: 'rds-test')]) {
+              // some block
+              sh '''sed -i "s/newdbuser/$(echo ${MYSQL_USER} | base64)/" deploykube/app/secrets-app.yaml'''
+              sh '''sed -i "s/newdbpass/$(echo ${MYSQL_PASSWORD} | base64)/" deploykube/app/secrets-app.yaml'''
+              sh '''sed -i "s/newdbname/$(echo ${rds-test} | base64)/" deploykube/app/secrets-app.yaml'''
+            }
+          sh "kubectl apply -f deploykube/app -n test --recursive"
         }
-      } 
+      }
     }
-
     // add condition to deploy in prod
   }
 }
