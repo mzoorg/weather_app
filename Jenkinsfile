@@ -1,4 +1,18 @@
-def tag = 'latest'
+def tag = ''
+def ECR = ''
+def release = false
+def prod = false
+
+withFolderProperties{ 
+    ECR_ENDPOINT = "${env.ECR_ENDPOINT}"
+}
+
+println "ECR_ENDPOINT = ${ECR_ENDPOINT}"
+
+if (ECR_ENDPOINT == '' || ECR_ENDPOINT == null || ECR_ENDPOINT == 'null') {
+    currentBuild.result = 'ABORTED'
+    error('Not defined ECR_ENDPOINT in Folder properies plugin!')
+}
 
 pipeline {
   agent {
@@ -7,6 +21,11 @@ pipeline {
       namespace 'devops-tools'
       yamlFile 'build-pod2.yaml'  // path to the pod definition relative to the root of our project 
     }
+  }
+
+  environment {
+    ECR_ENDPOINT = "${ECR_ENDPOINT}"
+    ECR_REPO = "${ECR_ENDPOINT}/weatherapp"
   }
   
   stages {
@@ -34,17 +53,16 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         container('docker-cmds') {
-          script {  
-            withDockerRegistry(credentialsId: 'dockerhubcreds') {
-                  sh 'printenv'
+          script {
+              withDockerRegistry(credentialsId: 'ecrcreds', url: '${env.ECR_ENDPOINT}') {
                   tag = env.TAG_NAME ?: env.BUILD_ID
                   release = env.TAG_NAME ? true : false
-                  def img = docker.build("mzoorg/weatherapp:${tag}")
+                  def img = docker.build("${env.ECR_REPO}:${tag}")
                   img.push()
                   if (env.TAG_NAME) {
                     img.push("latest")
                   }
-            }
+              }
           }
         }
       }
@@ -56,19 +74,30 @@ pipeline {
       steps {
         container('kubectl') {
           sh "kubectl version"
-          sh "sed -i 's/___K8S_IMG___/mzoorg\\/weatherapp:${tag}/' deploykube/app/deployment-app.yaml"
-          withCredentials([
-            usernamePassword(credentialsId: 'mysqlcreds', passwordVariable: 'MYSQL_PASSWORD', usernameVariable: 'MYSQL_USER'),
-            string(credentialsId: 'rds-test', variable: 'rds-test')]) {
-              // some block
-              sh '''sed -i "s/newdbuser/$(echo ${MYSQL_USER} | base64)/" deploykube/app/secrets-app.yaml'''
-              sh '''sed -i "s/newdbpass/$(echo ${MYSQL_PASSWORD} | base64)/" deploykube/app/secrets-app.yaml'''
-              sh '''sed -i "s/newdbname/$(echo ${rds-test} | base64)/" deploykube/app/secrets-app.yaml'''
-            }
-          sh "kubectl apply -f deploykube/app -n test --recursive"
+          sh """sed -i "s|___K8S_IMG___|${env.ECR_REPO}:${tag}|" deploykube/app/deployment-app.yaml"""
+          sh """sed -i "s|weather-app-secret|weather-app-secret-test|" deploykube/app/deployment-app.yaml"""
+          sh "kubectl apply -f deploykube/app -n test"
+          script {
+              if (release) {
+                prod = input  message: "deploy to prod?", id: 'prodDeploy',
+                      parameters: [booleanParam(name: "reviewed", defaultValue: false, description: "prod deploy")]
+                println prod
+              }
+          }
         }
       }
     }
-    // add condition to deploy in prod
+    stage ('Deploy in prod') {
+     when {
+      expression { prod == true }
+     }
+     steps {
+        container('kubectl') {
+          sh "kubectl version"
+          sh """sed -i "s|weather-app-secret-test|weather-app-secret-prod|" deploykube/app/deployment-app.yaml"""
+          sh "kubectl apply -f deploykube/app -n prod"
+       }
+     }
+    }
   }
 }

@@ -37,11 +37,14 @@ spec:
           ports:
           - containerPort: 5000
             name: http
-          env:
-          - name: MYSQL_HOST
-            value: 'weatherdb'
+          env:          
           - name: EXPORTER_PORT
             value: '5099'
+          - name: MYSQL_HOST
+            valueFrom:
+              secretKeyRef:
+                name: weather-app-secret
+                key: weatherdb
           - name: MYSQL_DB
             valueFrom:
               secretKeyRef:
