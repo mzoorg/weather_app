@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Pod 
 metadata:
   labels:
-    some-label: pod-runner2
-  name: dind
+    some-label: pod-runner
+  name: builder
 spec: 
     containers: 
       - name: docker-cmds 

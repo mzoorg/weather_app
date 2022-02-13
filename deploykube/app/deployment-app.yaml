@@ -1,8 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  # annotations:
-  #   flux.weave.works/automated: "true"
   name: weather-app
 spec:
   selector:
@@ -16,13 +14,12 @@ spec:
       containers:
         - name: weather-app
           image: ___K8S_IMG___
-          # image: mzoorg/weatherapp
           imagePullPolicy: IfNotPresent
           # livenessProbe:
           #   failureThreshold: 3
           #   httpGet:
           #     path: /
-          #     port: 8080
+          #     port: 5000
           #     scheme: HTTP
           #   initialDelaySeconds: 3
           #   periodSeconds: 3
@@ -32,7 +29,7 @@ spec:
           #   failureThreshold: 1
           #   httpGet:
           #     path: /
-          #     port: 8080
+          #     port: 5000
           #     scheme: HTTP
           ports:
           - containerPort: 5000
@@ -62,8 +59,8 @@ spec:
                 key: userpass
           resources:
             limits:
-              cpu: 500m
+              cpu: 200m
               memory: 500Mi
             requests:
               cpu: 500m
-              memory: 500Mi
+              memory: 1000Mi

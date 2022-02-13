@@ -14,4 +14,4 @@ spec:
         cidr: 0.0.0.0/0
     ports:
     - protocol: TCP
-      port: 80
+      port: 5000
