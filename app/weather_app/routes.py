@@ -56,6 +56,10 @@ def delete_record(record_id):
     flash('Your record has been deleted!', 'success')
     return redirect(url_for('index'))
 
+@app.route('/about', methods=['GET'])
+def about():
+    return render_template('about.html') 
+
 def calculate_avg(json_data, element_name):
     temp_list = []
     for referencetime in json_data['data']:
