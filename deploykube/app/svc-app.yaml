@@ -12,5 +12,6 @@ spec:
       protocol: TCP
       port: 5000
       targetPort: 5000
+      nodePort: 30937
   selector:
     app: weather-app

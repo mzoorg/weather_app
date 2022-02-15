@@ -65,12 +65,13 @@ pipeline {
           sh """sed -i "s|___K8S_IMG___|${env.ECR_REPO}:${tag}|" deploykube/app/deployment-app.yaml"""
           sh """sed -i "s|weather-app-secret|weather-app-secret-test|" deploykube/app/deployment-app.yaml"""
           sh "kubectl apply -f deploykube/app -n test"
+          echo 'Run some tests'
           script {
-              if (release) {
-                prod = input  message: "deploy to prod?", id: 'prodDeploy',
-                      parameters: [booleanParam(name: "reviewed", defaultValue: false, description: "prod deploy")]
-                println prod
-              }
+            if (release) {
+              prod = input  message: "deploy to prod?", id: 'prodDeploy',
+                    parameters: [booleanParam(name: "reviewed", defaultValue: false, description: "prod deploy")]
+              println prod
+            }
           }
         }
       }
