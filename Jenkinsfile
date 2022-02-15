@@ -21,7 +21,7 @@ pipeline {
       steps {
         git 'https://github.com/mzoorg/weather_app.git'
         script { 
-            def get_tag = sh(returnStdout: true, script: "git tag --points-at")
+            def get_tag = sh(returnStdout: true, script: "git tag --points-at").trim()
             tag = get_tag ?: env.BUILD_ID
             echo "new tag is ${tag}"
             release = get_tag ? true : false
@@ -37,7 +37,6 @@ pipeline {
         }
         steps {
             withSonarQubeEnv(installationName: 'SonarQubeServer', credentialsId: 'sonarqube-secret') {
-               sh 'printenv'
                sh "${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_NAME}"
             }
         }
