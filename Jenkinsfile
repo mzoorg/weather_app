@@ -20,6 +20,13 @@ pipeline {
     stage('git') {
       steps {
         git 'https://github.com/mzoorg/weather_app.git'
+        script { 
+            def get_tag = sh(returnStdout: true, script: "git tag --points-at")
+            tag = get_tag ?: env.BUILD_ID
+            echo "new tag is ${tag}"
+            release = get_tag ? true : false
+            echo "${release}"
+        }
       }
     }
     
@@ -41,11 +48,9 @@ pipeline {
         container('docker-cmds') {
           script {
               withDockerRegistry(credentialsId: 'ecrcreds', url: "${env.ECR_ENDPOINT}") {
-                  tag = env.TAG_NAME ?: env.BUILD_ID
-                  release = env.TAG_NAME ? true : false
                   def img = docker.build("${env.ECR_REPO}:${tag}")
                   img.push()
-                  if (env.TAG_NAME) {
+                  if (release) {
                     img.push("latest")
                   }
               }

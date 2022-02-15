@@ -15,25 +15,27 @@ spec:
         - name: weather-app
           image: ___K8S_IMG___
           imagePullPolicy: IfNotPresent
-          # livenessProbe:
-          #   failureThreshold: 3
-          #   httpGet:
-          #     path: /
-          #     port: 5000
-          #     scheme: HTTP
-          #   initialDelaySeconds: 3
-          #   periodSeconds: 3
-          #   successThreshold: 1
-          #   timeoutSeconds: 1
-          # readinessProbe:
-          #   failureThreshold: 1
-          #   httpGet:
-          #     path: /
-          #     port: 5000
-          #     scheme: HTTP
           ports:
           - containerPort: 5000
-            name: http
+            name: http          
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            httpGet:
+              path: /
+              port: 5000
+              scheme: HTTP
           env:          
           - name: EXPORTER_PORT
             value: '5099'
@@ -58,9 +60,9 @@ spec:
                 name: weather-app-secret
                 key: userpass
           resources:
-            limits:
-              cpu: 200m
-              memory: 500Mi
             requests:
-              cpu: 500m
-              memory: 1000Mi
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 1500m
+              memory: 1500Mi
