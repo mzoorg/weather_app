@@ -9,7 +9,7 @@
                 <a class="mr-2" href="{{ url_for('get_record', record_id=record.id)}}">Record N {{ record.id }}</a>
                 <small class="text-muted">Time period {{ record.observ_date }}</small>
             </div>
-                <p class="entity-content">Temperature is {{ record.temperature }} C and Humidity is {{ record.humidity }}</p>
+                <p class="entity-content">Temperature is {{ record.temperature }} C and Humidity is {{ record.humidity }}. Wish for you today: {{ record.whish }}</p> 
             </div>
         </entity>               
     {% endfor %}

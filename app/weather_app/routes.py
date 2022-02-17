@@ -1,4 +1,4 @@
-import requests, json, statistics
+import requests, json, statistics, random
 from flask import render_template, redirect, flash
 from flask.helpers import url_for
 from weather_app import app, db, config
@@ -58,7 +58,7 @@ def delete_record(record_id):
 
 @app.route('/about', methods=['GET'])
 def about():
-    return render_template('about.html') 
+    return render_template('about.html')
 
 def calculate_avg(json_data, element_name):
     temp_list = []
@@ -74,7 +74,13 @@ def put_db_data(json_data):
     filter_data['observ_date'] = config.REFERENCE_TIME
     filter_data['temperature'] = calculate_avg(json_data, 'air_temperature')
     filter_data['humidity'] = calculate_avg(json_data, 'relative_humidity')
-    cur_weather = Weather(station = filter_data['station'], observ_date = filter_data['observ_date'],
-            temperature = filter_data['temperature'], humidity = filter_data['humidity'])
+    filter_data['wish'] = random.choice(config.WISHES)
+    cur_weather = Weather(
+        station = filter_data['station'],
+        observ_date = filter_data['observ_date'],
+        temperature = filter_data['temperature'],
+        humidity = filter_data['humidity'],
+        whish = filter_data['wish']
+        )
     db.session.add(cur_weather)
     db.session.commit()

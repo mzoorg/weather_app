@@ -1,7 +1,10 @@
 .vscode/
 app/.venv/
-app/venv/
+app/*venv/
 app/*.env
+env/
 app/**/__pycache__/
 *.old
 plan*
+test*
+migrations/

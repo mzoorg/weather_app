@@ -45,6 +45,9 @@ spec:
               path: /
               port: 5000
               scheme: HTTP
+          volumeMounts:
+          - name: db_models
+            mountPath: /app/migrations
           env:          
           - name: EXPORTER_PORT
             value: '5099'
@@ -68,3 +71,7 @@ spec:
               secretKeyRef:
                 name: weather-app-secret
                 key: userpass
+      volumes:
+        - name: db_models
+          persistentVolumeClaim:
+            claimName: migrations-pvc
