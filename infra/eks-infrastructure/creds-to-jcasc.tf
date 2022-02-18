@@ -9,6 +9,7 @@ resource "kubernetes_secret" "rds-secret-test-tf" {
     userpass = module.db["${var.rds-test-name}"].db_master_password
     dbname = module.db["${var.rds-test-name}"].db_instance_name
     weatherdb = module.db["${var.rds-test-name}"].db_instance_endpoint
+    clientid = "${var.client-id}"
   }  
 }
 
@@ -23,6 +24,7 @@ resource "kubernetes_secret" "rds-secret-prod-tf" {
     userpass = module.db["${var.rds-prod-name}"].db_master_password
     dbname = module.db["${var.rds-prod-name}"].db_instance_name
     weatherdb = module.db["${var.rds-prod-name}"].db_instance_endpoint
+    clientid = "${var.client-id}"
   }
 }
 

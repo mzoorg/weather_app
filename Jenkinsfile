@@ -97,7 +97,7 @@ pipeline {
       }
       steps {
         container('kubectl') {
-          sh """sed -i "s|__NODEPORT__|30900|" deploykube/app/svc-app.yaml"""
+          sh """sed -i "s|30700|30900|" deploykube/app/svc-app.yaml"""
           sh "kubectl apply -f deploykube/app -n prod"
         }
      }
