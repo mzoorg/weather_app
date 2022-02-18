@@ -3,8 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from weather_app import config
 from prometheus_flask_exporter import PrometheusMetrics
 from flask_migrate import Migrate
-# from flask_script import Manager
-# from flask_migrate import Migrate, MigrateCommand
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'asd90787d8fg7d7fg6789yghuih5ghjgfjdsf'
@@ -17,7 +15,5 @@ metrics.start_http_server(config.EXPORTER_PORT)
 
 from weather_app import models
 migrate = Migrate(app, db)
-# manager = Manager(app)
-# manager.add_command('db', MigrateCommand)
 
 from weather_app import routes
