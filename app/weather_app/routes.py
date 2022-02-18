@@ -1,4 +1,4 @@
-import requests, json, statistics
+import requests, json, statistics, random
 from flask import render_template, redirect, flash
 from flask.helpers import url_for
 from weather_app import app, db, config
@@ -9,10 +9,11 @@ DEBUG = 0
 @app.route('/', methods=['GET'])
 def index():
     observations = Weather.query.order_by(Weather.id.desc())
+    today_wish = random.choice(config.WISHES)
 # Debugging
     if DEBUG:
         for i in observations: print(i['id'], i['station'], i['temperature'])
-    return render_template('mypage.html', observations=observations, source=config.SOURCES['name'])
+    return render_template('mypage.html', observations=observations, source=config.SOURCES['name'], wish=today_wish)
 
 @app.route('/request_data', methods=['GET'])
 def request_data():

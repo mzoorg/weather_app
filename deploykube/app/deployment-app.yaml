@@ -68,3 +68,8 @@ spec:
               secretKeyRef:
                 name: weather-app-secret
                 key: userpass
+          - name: CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: weather-app-secret
+                key: clientid

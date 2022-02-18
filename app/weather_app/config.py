@@ -8,6 +8,7 @@ SOURCES = {
     'name': 'Oslo (Blindern)',
     'id': 'SN18700'
 }
+WISHES = ['Have a good day', 'Good morning', 'Hello from application', 'Get ready!', 'Call your grandparents. They miss you']
 
 MYSQL_HOST = os.getenv('MYSQL_HOST')
 MYSQL_USER = os.getenv('MYSQL_USER')
