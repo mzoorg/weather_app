@@ -374,10 +374,16 @@ jdbcOverwrite:
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 postgresql:
   # Enable to deploy the PostgreSQL chart
-  nodeSelector:
-    sonarqube: "true"
   enabled: true
   ## postgresql Chart global settings
+  primary:
+    nodeSelector:
+      sonarqube: "true"
+    tolerations: 
+    - key: "sonarqube"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
   # global:
   #   imageRegistry: ''
   #   imagePullSecrets: ''
@@ -412,7 +418,7 @@ postgresql:
     enabled: true
     accessMode: ReadWriteOnce
     size: 20Gi
-    storageClass:
+    storageClass: gp2-retain
   securityContext:
     # For standard Kubernetes deployment, set enabled=true
     # If using OpenShift, enabled=false for restricted SCC and enabled=true for anyuid/nonroot SCC

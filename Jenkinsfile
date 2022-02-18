@@ -1,6 +1,7 @@
 def tag = ''
 def release = false
 def prod = false
+def delete_test = false
 
 pipeline {
   agent {
@@ -61,9 +62,8 @@ pipeline {
     stage('Deploy in test') {
       steps {
         container('kubectl') {
-          sh "kubectl version"
           sh """sed -i "s|___K8S_IMG___|${env.ECR_REPO}:${tag}|" deploykube/app/deployment-app.yaml"""
-          sh """sed -i "s|weather-app-secret|weather-app-secret-test|" deploykube/app/deployment-app.yaml"""
+          sh """sed -i "s|__NODEPORT__|30700|" deploykube/app/svc-app.yaml"""
           sh "kubectl apply -f deploykube/app -n test"
           echo 'Run some tests'
           script {
@@ -73,20 +73,33 @@ pipeline {
               println prod
             }
           }
+          script {
+            delete_test = input message: 'delete test env?', id: 'rmTest',
+                    parameters: [booleanParam(name: 'delete', defaultValue: false, description: 'delete test env?')]
+          }
         }
       }
     }
-    
-    stage ('Deploy in prod') {
-     when {
-      expression { prod == true }
-     }
-     steps {
+    stage ('Delete test env') {
+      when {
+        expression { delete_test == true }
+      }
+      steps {
         container('kubectl') {
-          sh "kubectl version"
-          sh """sed -i "s|weather-app-secret-test|weather-app-secret-prod|" deploykube/app/deployment-app.yaml"""
+          sh "kubectl delete -f deploykube/app -n test"
+        }
+      }
+    }
+
+    stage ('Deploy in prod') {
+      when {
+        expression { prod == true }
+      }
+      steps {
+        container('kubectl') {
+          sh """sed -i "s|__NODEPORT__|30900|" deploykube/app/svc-app.yaml"""
           sh "kubectl apply -f deploykube/app -n prod"
-       }
+        }
      }
     }
   }

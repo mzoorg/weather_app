@@ -5,7 +5,6 @@ module "db" {
   for_each = toset(["${var.rds-test-name}", "${var.rds-prod-name}"])
   identifier = each.key
 
-  # All available versions: http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.VersionMgmt
   engine               = "mysql"
   engine_version       = "8.0.20"
   family               = "mysql8.0" # DB parameter group
@@ -34,23 +33,4 @@ module "db" {
   enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
   
   tags = local.tags
-
-  db_instance_tags = {
-    "Sensitive" = "high"
-  }
-  db_option_group_tags = {
-    "Sensitive" = "low"
-  }
-  db_parameter_group_tags = {
-    "Sensitive" = "low"
-  }
-  db_subnet_group_tags = {
-    "Sensitive" = "high"
-  }
-
-#   timeouts = {
-#     + create = "5m"
-#     + delete = "60m"
-#     + update = "60m"
-#   }
 }

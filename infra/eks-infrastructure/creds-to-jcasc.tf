@@ -1,6 +1,6 @@
 resource "kubernetes_secret" "rds-secret-test-tf" {
   metadata {
-    name = "weather-app-secret-test"
+    name = "weather-app-secret"
     namespace = "test"
   }
 
@@ -14,7 +14,7 @@ resource "kubernetes_secret" "rds-secret-test-tf" {
 
 resource "kubernetes_secret" "rds-secret-prod-tf" {
   metadata {
-    name = "weather-app-secret-prod"
+    name = "weather-app-secret"
     namespace = "prod"
   }
 
