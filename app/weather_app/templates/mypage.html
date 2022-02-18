@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>{% block title %} A weather statistic for {{ source }} {% endblock %}</h1>
+    <p class="entity-content"> {{ wish }} </p>
     {% for record in observations %}
         <entity class="media content-section">
             <div class="media-body">
